@@ -89,7 +89,10 @@ namespace OLDD_camera.Utils
 */
             }
 
-            
+            var index = materials.FindIndex(x => x.name.Contains("None"));
+            var item = materials[index];
+            materials[index] = materials[0];
+            materials[0] = item;
 
 
             texSelfRot = (Texture2D)bundle.LoadAsset("selfrot");
