@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace OLDD_camera.Modules
 {
-    class DockingCameraModule : PartModule, ICamPart
+    public  class DockingCameraModule : PartModule, ICamPart
     {
         /// <summary>
         /// Module adds an external camera and gives control over it
@@ -28,14 +28,65 @@ namespace OLDD_camera.Modules
         private bool _targetCrossStock = true;
 
         private int _windowSize = 256;
-        private DockingCamera _camera;
+        internal DockingCamera _camera;
 
+        // cameraName is a transform where the camera should be.
         [KSPField]
         public string cameraName = "";
 
         [KSPField]
+        public string cameraLabel = "";
+
+        [KSPField]
         public string windowLabel = "";
 
+        [KSPField]
+        public bool crossDPAIonAtStartup = true;
+        [KSPField]
+        public bool crossOLDDonAtStartup = true;
+        [KSPField]
+        public bool targetCrossStockOnAtStartup = true;
+        [KSPField]
+        public bool slidingOptionWindow = true;
+        [KSPField]
+        public bool allowZoom = true;
+
+
+        [KSPField( isPersistant = true )]
+        public Vector3 cameraPosition = Vector3.zero;
+
+        [KSPField(isPersistant = true)]
+        public Vector3 cameraForward = Vector3.up;
+
+        [KSPField(isPersistant = true)]
+        public Vector3 cameraUp = Vector3.up;
+
+        [KSPField(isPersistant = true)]
+        public bool transformModification = true;
+
+        [KSPField]
+        public bool devMode = false;
+
+        CameraAdjust.CameraAdjuster ca = null;
+        [KSPEvent(guiActive = true, guiName = "Camera Adjuster")]
+        public void StartCameraAdjuster()
+        {
+            if (ca == null)
+            {
+                ca = this.gameObject.AddComponent<CameraAdjust.CameraAdjuster>();
+            }
+            ca.SetDcm(this);
+            
+            ca.active = !ca.active;
+            if (!ca.active)
+            {
+                ca.OnDestroy();
+                ca = null;
+            }
+        }
+
+        //static int cameraCnt = 0;
+        //int thisCamera = -1;
         public override void OnStart(StartState state)
         {
             if (state == StartState.Editor || _camera != null) return;
@@ -43,11 +94,24 @@ namespace OLDD_camera.Modules
             if (_camera == null)
             {
                 if(cameraName != "")
-                    _camera = new DockingCamera(part, noise, _targetCrossStock, _crossDPAI, _crossOLDD, _windowSize, windowLabel, cameraName);
+                    _camera = new DockingCamera(this, part, 
+                        noise, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
+                        _windowSize, windowLabel, cameraName, 
+                        slidingOptionWindow, allowZoom);
                 else
-                    _camera = new DockingCamera(part, noise, _targetCrossStock, _crossDPAI, _crossOLDD, _windowSize);
+                    _camera = new DockingCamera(this, part, 
+                        noise, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
+                        _windowSize);
             }
-                
+            if (cameraLabel != "")
+                Fields["IsEnabled"].guiName = cameraLabel;
+            _crossDPAI = crossDPAIonAtStartup;
+            _crossOLDD = crossOLDDonAtStartup;
+            _targetCrossStock = targetCrossStockOnAtStartup;
+            if (!devMode)
+            {
+                Events["StartCameraAdjuster"].guiActive = false;
+            }
         }
 
         public override void OnUpdate()
@@ -66,6 +130,7 @@ namespace OLDD_camera.Modules
             {
                 IsEnabled = false;
                 _camera.IsButtonOff = false;
+    
             }
 
             if (IsEnabled)

@@ -1,4 +1,4 @@
-#define KSP170
+//#define KSP170  // Better defined in the project file
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,11 +32,9 @@ namespace OLDD_camera.Camera
         internal int TextureNoSignalId;
         protected RenderTexture RenderTexture;
 
-        private ShaderType _shaderType;
-#if false
-        private ShaderType1 _shaderType1;
-        private ShaderType2 _shaderType2;
-#endif
+        //private ShaderType _shaderType;
+        private int _shaderIndex = 0;
+
         private static string _currentShaderName;
         //internal static int ShadersToUse = 0;
 
@@ -65,7 +63,9 @@ namespace OLDD_camera.Camera
         internal bool IsButtonOff;
         internal bool IsOrbital;
         internal bool IsAuxiliaryWindowOpen;
+        internal bool AuxWindowAllowed = true;
         internal bool IsAuxiliaryWindowButtonPres;
+        internal bool IsZoomAllowed = true;
 
         protected List<UnityEngine.Camera> AllCameras = new List<UnityEngine.Camera>();
         protected List<GameObject> AllCamerasGameObject = new List<GameObject>();
@@ -177,6 +177,9 @@ namespace OLDD_camera.Camera
 
         protected virtual void InitCameras()
         {
+            IsAuxiliaryWindowOpen = false;
+            IsAuxiliaryWindowButtonPres = false;
+
             AllCamerasGameObject = CameraNames.Select(a => new GameObject()).ToList();
             AllCameras = AllCamerasGameObject.Select((go, i) =>
                 {
@@ -271,10 +274,11 @@ namespace OLDD_camera.Camera
             }
             //GUI.DrawTexture(TexturePosition, _textureBackGroundCamera);
 
-            CurrentShader = CameraShaders.GetShader(_shaderType);
+            CurrentShader = AssetLoader.materials[_shaderIndex];
+            //CurrentShader = CameraShaders.GetShader(_shaderType); ///* dynamicload
 
             _currentShaderName = CurrentShader == null ? "none" : CurrentShader.name;
-            //Debug.Log("CurrentShader: " + CurrentShader);
+
             if (Event.current.type.Equals(EventType.Repaint))
                 Graphics.DrawTexture(TexturePosition, Render(), CurrentShader);
         }
@@ -338,11 +342,13 @@ namespace OLDD_camera.Camera
                 if (GUI.Button(new Rect(WindowPosition.width - 20, 3, GameSettings.UI_SCALE * 15 + 4, GameSettings.UI_SCALE * 15), "x"))
                     IsButtonOff = true;
             }
-
-            if (GUI.Button(new Rect(WindowPosition.width - 29, 20, GameSettings.UI_SCALE * 24, GameSettings.UI_SCALE * 15), IsAuxiliaryWindowOpen ? "◄" : "►")) //extend window
+            if (AuxWindowAllowed)
             {
-                IsAuxiliaryWindowOpen = !IsAuxiliaryWindowOpen;
-                IsAuxiliaryWindowButtonPres = true;
+                if (GUI.Button(new Rect(WindowPosition.width - 29, 20, GameSettings.UI_SCALE * 24, GameSettings.UI_SCALE * 15), IsAuxiliaryWindowOpen ? "◄" : "►")) //extend window
+                {
+                    IsAuxiliaryWindowOpen = !IsAuxiliaryWindowOpen;
+                    IsAuxiliaryWindowButtonPres = true;
+                }
             }
 
             var tooltip = new GUIContent("☼", _currentShaderName);
@@ -350,37 +356,22 @@ namespace OLDD_camera.Camera
             GUI.Label(new Rect(64, 128, GameSettings.UI_SCALE * 200, GameSettings.UI_SCALE * 40), GUI.tooltip, Styles.GreenLabel15B);
             if (GUI.Button(new Rect(8, TexturePosition.yMax - 22, 20, 20), "☼"))
             {
-#if false
-                switch (ShadersToUse)
-                {
-                    case 0:
-                        _shaderType++;
-                        if (!Enum.IsDefined(typeof (ShaderType), _shaderType))
-                            _shaderType = ShaderType.None;
-                        break;
-                    case 1:
-                        _shaderType1++;
-                        if (!Enum.IsDefined(typeof(ShaderType1), _shaderType1))
-                            _shaderType1 = ShaderType1.CRT;
-                        break;
-                    case 2:
-                        _shaderType2++;
-                        if (!Enum.IsDefined(typeof (ShaderType2), _shaderType2))
-                            _shaderType2 = ShaderType2.None;
-                        break;
-                }
-           
-#else
+                if (_shaderIndex == AssetLoader.materials.Count - 1)
+                    _shaderIndex = 0;
+                else
+                    _shaderIndex++;
+
+
+                /* dynamicload
                 _shaderType++;
                 if (!Enum.IsDefined(typeof(ShaderType), _shaderType))
                     _shaderType = ShaderType.None;
-#endif
+                    */
             }
-            //if (GUI.RepeatButton(new Rect(TexturePosition.xMax - 22, TexturePosition.yMax - 22, 20, 20), "±") && 	
+            
             if (GUI.RepeatButton(new Rect(TexturePosition.xMax - 42, TexturePosition.yMax - 22, 20, 20), "-") &&
                 UnityEngine.Camera.allCameras.FirstOrDefault(x => x.name == "Camera 00") != null) //Size of main window
             {
-                //WindowSizeCoef = ((WindowSizeCoef - 1)%(MaxWindowSizeCoef-1))+2;
                 WindowSizeCoef--;
                 if (WindowSizeCoef < 2)
                     WindowSizeCoef = MaxWindowSizeCoef;
@@ -401,12 +392,12 @@ namespace OLDD_camera.Camera
                 Deactivate();
                 InitWindow();
                 InitTextures();
-                Activate();
-                //IsAuxiliaryWindowOpen = false;
+                Activate();                
 
                 IsAuxiliaryWindowButtonPres = IsAuxiliaryWindowOpen;
             }
-            CurrentZoom = GUI.HorizontalSlider(new Rect(TexturePosition.width / 2 - 80, GUI.skin.font.lineHeight + 10, 160, 10), CurrentZoom, MaxZoom, MinZoom);
+            if (IsZoomAllowed)
+                CurrentZoom = GUI.HorizontalSlider(new Rect(TexturePosition.width / 2 - 80, GUI.skin.font.lineHeight + 10, 160, 10), CurrentZoom, MaxZoom, MinZoom);
         }
 
         #endregion DRAW LAYERS

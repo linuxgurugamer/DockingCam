@@ -18,7 +18,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SHADERTESTOff</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SHADERTESTOff KSP170</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -37,7 +37,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyVersion.tt</DependentUpon>
     </Compile>
+    <Compile Include="CameraAdjust\CameraAdjuster.cs" />
+    <Compile Include="CameraAdjust\CameraMarker.cs" />
+    <Compile Include="CameraAdjust\InFlightMarkerCam.cs" />
     <Compile Include="DockCamToolbarButton.cs" />
+    <Compile Include="DrawTools.cs" />
     <Compile Include="RegisterToolbar.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utils\AssetLoader.cs" />
@@ -83,6 +87,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"c:\shawn\Debugging\pdb2mdb\pdb2mdb.exe" $(TargetFileName)

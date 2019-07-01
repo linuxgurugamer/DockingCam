@@ -22,7 +22,7 @@ namespace OLDD_camera.Camera
         private Texture2D _textureVLineBack;
         private Texture2D _textureHLineBack;
 
-        private readonly GameObject _moduleDockingNodeGameObject;
+        internal readonly GameObject _moduleDockingNodeGameObject;
         private TargetHelper _target;
 
         internal bool Noise;
@@ -41,6 +41,8 @@ namespace OLDD_camera.Camera
         private string _lastVesselName;
         private string _windowLabelSuffix;
 
+        Modules.DockingCameraModule _dcm;
+
         public Color TargetCrossColorOLDD
         {
 
@@ -52,6 +54,7 @@ namespace OLDD_camera.Camera
                 _textureHLineOLDD = Util.MonoColorHorizontalLineTexture(_targetCrossColorOLDD, (int)WindowSize * WindowSizeCoef);
             }
         }
+
         public Color TargetCrossColorDPAI
         {
             get { return _targetCrossColorDPAI; }
@@ -72,9 +75,24 @@ namespace OLDD_camera.Camera
                 _textureHLineBack = Util.MonoColorHorizontalLineTexture(TargetCrossColorBack, (int)WindowSize * WindowSizeCoef);
             }
         }
+        
 
+        public void UpdateLocalPosition(Modules.DockingCameraModule dcm)
+        {
+            _dcm = dcm;
 
-        public DockingCamera(Part thisPart, bool noise, bool crossStock, bool crossDPAI, bool crossOLDD, int windowSize, string windowLabel = "DockCam", string cameraName = "dockingNode")
+            TargetCrossDPAI = dcm.crossDPAIonAtStartup;
+            TargetCrossOLDD = dcm.crossOLDDonAtStartup;
+            TargetCrossStock = dcm.targetCrossStockOnAtStartup;
+            AuxWindowAllowed = dcm.slidingOptionWindow;
+
+            Noise = dcm.noise;
+        }
+
+        public DockingCamera(OLDD_camera.Modules.DockingCameraModule dcm, Part thisPart,
+            bool noise, bool crossStock, bool crossDPAI, bool crossOLDD, bool transformModification,
+            int windowSize, string windowLabel = "DockCam", string cameraName = "dockingNode", 
+            bool slidingOptionWindow = false, bool allowZoom = false, bool noTransformMod = false)
             : base(thisPart, windowSize, windowLabel)
         {
             GameEvents.onGameSceneLoadRequested.Add(LevelWasLoaded);
@@ -82,18 +100,30 @@ namespace OLDD_camera.Camera
             TargetCrossDPAI = crossDPAI;
             TargetCrossOLDD = crossOLDD;
             TargetCrossStock = crossStock;
+            AuxWindowAllowed = slidingOptionWindow;
+            IsZoomAllowed = allowZoom;
+            
             _target = new TargetHelper(thisPart);
             _moduleDockingNodeGameObject = PartGameObject.GetChild(cameraName) ?? PartGameObject;  //GET orientation from dockingnode
 
-            if (_textureWhiteNoise != null)
-                return;
-
-            _textureWhiteNoise = new List<Texture2D>[4];
-            for (int j = 0; j < 3; j++)
+            if (cameraName != "dockingNode" && transformModification)
             {
-                _textureWhiteNoise[j] = new List<Texture2D>();
-                for (int i = 0; i < 4; i++)
-                    _textureWhiteNoise[j].Add(Util.WhiteNoiseTexture((int)TexturePosition.width, (int)TexturePosition.height));
+                Vector3 v3 = dcm.cameraPosition;
+
+                _moduleDockingNodeGameObject.transform.position += _moduleDockingNodeGameObject.transform.rotation * v3;
+                _moduleDockingNodeGameObject.transform.rotation = dcm.part.transform.rotation;
+                _moduleDockingNodeGameObject.transform.rotation *= Quaternion.LookRotation(dcm.cameraForward, dcm.cameraUp);
+            }
+
+            if (_textureWhiteNoise == null)
+            {
+                _textureWhiteNoise = new List<Texture2D>[4];
+                for (int j = 0; j < 3; j++)
+                {
+                    _textureWhiteNoise[j] = new List<Texture2D>();
+                    for (int i = 0; i < 4; i++)
+                        _textureWhiteNoise[j].Add(Util.WhiteNoiseTexture((int)TexturePosition.width, (int)TexturePosition.height));
+                }
             }
         }
 
@@ -372,7 +402,15 @@ namespace OLDD_camera.Camera
             UpdateWhiteNoise();
 
             AllCamerasGameObject.Last().transform.position = _moduleDockingNodeGameObject.transform.position; // near&&far
+            //AllCamerasGameObject.Last().transform.localPosition = _moduleDockingNodeGameObject.transform.localPosition;
+            //AllCamerasGameObject.Last().transform.localRotation = _moduleDockingNodeGameObject.transform.localRotation;
             AllCamerasGameObject.Last().transform.rotation = _moduleDockingNodeGameObject.transform.rotation;
+
+            var sCam = AllCamerasGameObject.Last();
+            sCam.transform.parent = AllCamerasGameObject.Last().transform;
+            //sCam.transform.localPosition = _dcm.cameraPosition;
+            //sCam.transform.localRotation = Quaternion.LookRotation(_dcm.cameraForward, _dcm.cameraUp);
+            
 
             AllCamerasGameObject[0].transform.rotation = AllCamerasGameObject.Last().transform.rotation; // skybox galaxy
             AllCamerasGameObject[1].transform.rotation = AllCamerasGameObject.Last().transform.rotation; // nature object

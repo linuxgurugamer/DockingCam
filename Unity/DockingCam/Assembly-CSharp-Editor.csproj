@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Editor\build.cs" />
      <None Include="Assets\CustomCRT.shader" />
+     <None Include="Assets\ThermalVision.shader" />
      <None Include="Assets\CustomNightVision.shader" />
      <None Include="Assets\None.shader" />
      <None Include="Assets\HiddenNightvision.shader" />

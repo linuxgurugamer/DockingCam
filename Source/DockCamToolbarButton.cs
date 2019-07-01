@@ -68,14 +68,6 @@ namespace OLDD_camera
         public void Update()
         {
             _showWindow = mainWindowVisible && HighLogic.LoadedSceneIsFlight && !FlightGlobals.ActiveVessel.isEVA; // && !MapView.MapIsEnabled;
-#if false
-            if (_shadersToUse0)
-                BaseCamera.ShadersToUse = 0;
-            else if (_shadersToUse1)
-                BaseCamera.ShadersToUse = 1;
-            else if (_shadersToUse2)
-                BaseCamera.ShadersToUse = 2;
-#endif
         }
 
         private void OnGUI()
@@ -145,31 +137,9 @@ namespace OLDD_camera
         private static void DrawOnWindowOLDD(int windowID)
         {
             var checkDist = FlightGlobals.ActiveVessel.vesselRanges.landed.load;
-#if false
-            if (GUI.Toggle(new Rect(20, 20, 44, 20), _dist2500, "2250"))
-            {
-                _dist2500 = true;
-                _dist9999 = false;
-                if (checkDist > 3333 && _dist2500)
-                    GameEvents.onVesselChange.Fire(FlightGlobals.ActiveVessel);
-            }
-
-            if (GUI.Toggle(new Rect(80, 20, 44, 20), _dist9999, "9999"))
-            {
-                _dist9999 = true;
-                _dist2500 = false;
-                if (checkDist < 3333 && _dist9999)
-                    GameEvents.onVesselChange.Fire(FlightGlobals.ActiveVessel);
-            }
-#endif
             var unloadDistance = "Unload at: " + FlightGlobals.ActiveVessel.vesselRanges.landed.load;
             GUI.Label(new Rect(22, 48, 100, 20), unloadDistance, Styles.Label13B);
 
-            //GetShadersPack();
-#if false
-            if (FCS = GUI.Toggle(new Rect(20, 100, 222, 20), FCS, "Cam shutdown if out of range"))
-                SaveWindowData();
-#endif
             var vessels = _vesselsWithCamera;
             vessels.Remove(FlightGlobals.ActiveVessel);
             //DockCamToolbarButton.instance.NewVesselCreated(FlightGlobals.ActiveVessel);
@@ -199,35 +169,7 @@ namespace OLDD_camera
             _lastWindowPosition.y = _windowPosition.y;
             SaveWindowData();
         }
-#if false
-        private static void GetShadersPack()
-        {
-            if (GUI.Toggle(new Rect(20, 40, 222, 20), _shadersToUse0, "Shaders pack Full (7 choices)"))
-            {
-                BaseCamera.ShadersToUse = 0;
-                _shadersToUse0 = true;
-                _shadersToUse1 = false;
-                _shadersToUse2 = false;
-                SaveWindowData();
-            }
-            if (GUI.Toggle(new Rect(20, 60, 222, 20), _shadersToUse1, "Shaders pack Noisy (2 choices)"))
-            {
-                BaseCamera.ShadersToUse = 1;
-                _shadersToUse0 = false;
-                _shadersToUse1 = true;
-                _shadersToUse2 = false;
-                SaveWindowData();
-            }
-            if (GUI.Toggle(new Rect(20, 80, 222, 20), _shadersToUse2, "Shaders pack Standard (3 choices)"))
-            {
-                BaseCamera.ShadersToUse = 2;
-                _shadersToUse0 = false;
-                _shadersToUse1 = false;
-                _shadersToUse2 = true;
-                SaveWindowData();
-            }
-        }
-#endif
+
         private void VesselsUndocked(Vessel d1, Vessel d2)
         {
             NewVesselCreated(d1);

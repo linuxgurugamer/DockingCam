@@ -255,15 +255,6 @@ namespace OLDD_camera.Camera
                     case Alignment.down: RotateY -= _rotateStep; break;
                     case Alignment.left: RotateZ += _rotateStep;break;
                 }
-#if false
-                if (_rotateYbuffer < 180)
-                {
-                    if (!_isUpsideDown)
-                        RotateY += _rotateStep;
-                    else
-                        RotateY -= _rotateStep;
-                }
-#endif
             }
             if (GUI.Button(new Rect(widthOffset + ButtonSize * 2, 36, ButtonSize, ButtonSize), "⦿"))
             {
@@ -307,12 +298,6 @@ namespace OLDD_camera.Camera
             }
             if (GUI.RepeatButton(new Rect(widthOffset, 36 + ButtonSize, ButtonSize, ButtonSize), "←"))
             {
-#if false
-                if (!_isUpsideDown)
-                    RotateZ -= _rotateStep;
-                else
-                    RotateZ += _rotateStep;
-#endif
                 switch (_alignment)
                 {
                     case Alignment.up: RotateZ -= _rotateStep; break;

@@ -43,13 +43,41 @@ namespace OLDD_camera
         [GameParameters.CustomParameterUI("Use KSP skin")]
         public bool useKSPskin = false;
 
+        [GameParameters.CustomParameterUI("Use camera object for adjustments",
+            toolTip = "Only used when using dev mode to adjust a camera's position")]
+        public bool useCamObj = true;
+
+        [GameParameters.CustomParameterUI("Use node object for adjustments",
+            toolTip = "Only used when using dev mode to adjust a camera's position")]
+        public bool useNodeObj = false;
+
+
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {
 
         }
 
+        bool oldUseCamObj, oldUseNodeObj;
+
         public override bool Enabled(MemberInfo member, GameParameters parameters)
         {
+            if (oldUseCamObj == false && oldUseNodeObj == false)
+            {
+                oldUseCamObj = useCamObj;
+                oldUseNodeObj = useNodeObj;
+            }
+            // The following is used to ensure that one and exactly one of the two
+            // options are set
+
+            if (useCamObj && !oldUseCamObj)
+                useNodeObj = false;
+
+            if (useNodeObj && !oldUseNodeObj)
+                useCamObj = false;
+
+            oldUseCamObj = useCamObj;
+            oldUseNodeObj = useNodeObj;
+
             return true;
         }
 
