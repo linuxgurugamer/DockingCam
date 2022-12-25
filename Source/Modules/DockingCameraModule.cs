@@ -70,10 +70,13 @@ namespace OLDD_camera.Modules
         [KSPField(isPersistant = true)]
         public bool transformModification = true;
 
-
+#if DEBUG
+        [KSPField]
+        public bool devMode = true;
+#else
         [KSPField]
         public bool devMode = false;
-
+#endif
 
         //////////////////////////////////////////////////////////////////////////////
 
@@ -120,6 +123,7 @@ namespace OLDD_camera.Modules
                 IsEnabled = true;
         }
 
+#if false
         CameraAdjust.CameraAdjuster ca = null;
         [KSPEvent(guiActive = true, guiName = "Camera Adjuster")]
         public void StartCameraAdjuster()
@@ -137,7 +141,7 @@ namespace OLDD_camera.Modules
                 ca = null;
             }
         }
-
+#endif
 
         //static int cameraCnt = 0;
         //int thisCamera = -1;

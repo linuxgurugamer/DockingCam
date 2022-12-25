@@ -2,8 +2,9 @@
 using System.IO;
 using UnityEngine;
 using ClickThroughFix;
+using OLDD_camera.Utils;
 
-
+#if false
 namespace OLDD_camera.CameraAdjust
 {
     
@@ -159,6 +160,7 @@ namespace OLDD_camera.CameraAdjust
 
             }
             GUILayout.EndHorizontal();
+
             GUILayout.BeginHorizontal();
             {
                 GUILayout.Label("Y (" + dcm.cameraPosition.y.ToString("#0.0##") + "):", GUILayout.Width(LABELWIDTH));
@@ -178,6 +180,7 @@ namespace OLDD_camera.CameraAdjust
 
             }
             GUILayout.EndHorizontal();
+
             GUILayout.BeginHorizontal();
             {
                 GUILayout.Label("Z (" + dcm.cameraPosition.z.ToString("#0.0##") + "):", GUILayout.Width(LABELWIDTH));
@@ -248,10 +251,9 @@ namespace OLDD_camera.CameraAdjust
                     dcm.cameraForward.y += deltaFwd;
                     UpdateCamera(v3, false);
                 }
-
-
             }
             GUILayout.EndHorizontal();
+
             GUILayout.BeginHorizontal();
             {
                 GUILayout.Label("Z (" + dcm.cameraForward.z.ToString("#0.0##") + "):", GUILayout.Width(LABELWIDTH));
@@ -326,8 +328,6 @@ namespace OLDD_camera.CameraAdjust
                     dcm.cameraUp.y += deltaUp;
                     UpdateCamera(v3, false);
                 }
-
-
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
@@ -418,3 +418,4 @@ namespace OLDD_camera.CameraAdjust
         }
     }
 }
+#endif

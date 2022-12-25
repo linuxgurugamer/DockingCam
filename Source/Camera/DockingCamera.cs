@@ -124,15 +124,16 @@ namespace OLDD_camera.Camera
         public void UpdatePositionAndRotation(OLDD_camera.Modules.DockingCameraModule dcm)
         {
 
-                Log.Info("DockingCamera, cameraName: " + dcm.cameraName + ", cameraTransformName: " + dcm.cameraTransformName + ", transformModification: " + dcm.transformModification);
-                UnityEngine.Object.Destroy(_moduleDockingNodeGameObject);
-                _moduleDockingNodeGameObject = PartGameObject.GetChild(dcm.cameraTransformName) ?? PartGameObject;  //GET orientation from dockingnode
-                GameObject go = GameObject.Instantiate(_moduleDockingNodeGameObject);
-                go.transform.position = _moduleDockingNodeGameObject.transform.position;
-                go.transform.rotation = _moduleDockingNodeGameObject.transform.rotation;
-                go.transform.parent = _moduleDockingNodeGameObject.transform.parent;
-                go.SetActive(false);
-                _moduleDockingNodeGameObject = go;
+            Log.Info("DockingCamera.UpdatePositionAndRotation, cameraName: " + dcm.cameraName + ", cameraTransformName: " + dcm.cameraTransformName + ", transformModification: " + dcm.transformModification);
+            UnityEngine.Object.Destroy(_moduleDockingNodeGameObject);
+            _moduleDockingNodeGameObject = PartGameObject.GetChild(dcm.cameraTransformName) ?? PartGameObject;  //GET orientation from dockingnode
+            GameObject go = GameObject.Instantiate(_moduleDockingNodeGameObject);
+            go.transform.position = _moduleDockingNodeGameObject.transform.position;
+            go.transform.rotation = _moduleDockingNodeGameObject.transform.rotation;
+            go.transform.parent = _moduleDockingNodeGameObject.transform.parent;
+            go.SetActive(false);
+            _moduleDockingNodeGameObject = go;
+            Log.Info("DockingCamera.UpdatePositionAndRotation 2");
 
             if (dcm.cameraName != "dockingNode" && dcm.transformModification)
             {
@@ -141,11 +142,12 @@ namespace OLDD_camera.Camera
                 _moduleDockingNodeGameObject.transform.position += _moduleDockingNodeGameObject.transform.rotation * v3;
                 _moduleDockingNodeGameObject.transform.rotation = dcm.part.transform.rotation;
                 _moduleDockingNodeGameObject.transform.rotation *= Quaternion.LookRotation(dcm.cameraForward, dcm.cameraUp);
+                Log.Info("DockingCamera.UpdatePositionAndRotation 3");
             }
         }
 #endif
 
- #if false
+#if false
        public void DoStart()
         {
             if (dcm.cameraName != "dockingNode" && dcm.transformModification)

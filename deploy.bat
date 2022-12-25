@@ -3,7 +3,7 @@
 
 set H=%KSPDIR%
 
-set H=R:\KSP_1.12.3_IFI_US2
+set H=R:\KSP_1.12.4
 
 set GAMEDIR=DockingCamKURS
 
