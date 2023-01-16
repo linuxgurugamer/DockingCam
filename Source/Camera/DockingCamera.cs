@@ -69,7 +69,7 @@ namespace OLDD_camera.Camera
             bool noise, double electricchargeCost, bool crossStock, bool crossDPAI, bool crossOLDD, bool transformModification,
             int windowSize, string restrictShaderTo,
             string windowLabel = "DockCam", string cameraName = "dockingNode",
-            bool slidingOptionWindow = false, bool allowZoom = false,
+            bool slidingOptionWindow = false, bool allowZoom = true,
             string cameraTransformName = "")
             : base(thisPart, windowSize, windowLabel)
         {
