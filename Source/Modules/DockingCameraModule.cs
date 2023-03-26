@@ -149,19 +149,17 @@ namespace OLDD_camera.Modules
         {
             if (state == StartState.Editor || _camera != null) return;
 
-            //if (_camera == null)
-            {
-                if (cameraName != "")
-                    _camera = new DockingCamera(this, part,
-                        noise, electricchargeCost, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
-                        _windowSize, restrictShaderTo,
-                        windowLabel, cameraName, slidingOptionWindow, allowZoom,
-                        cameraTransformName);
-                else
-                    _camera = new DockingCamera(this, part,
-                        noise, electricchargeCost, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
-                        _windowSize, restrictShaderTo, allowZoom: allowZoom);
-            }
+            if (cameraName != "")
+                _camera = new DockingCamera(this, part,
+                    noise, electricchargeCost, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
+                    _windowSize, restrictShaderTo,
+                    windowLabel, cameraName, slidingOptionWindow, allowZoom,
+                    cameraTransformName);
+            else
+                _camera = new DockingCamera(this, part,
+                    noise, electricchargeCost, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
+                    _windowSize, restrictShaderTo, allowZoom: allowZoom);
+
             if (cameraLabel != "")
                 Fields["IsEnabled"].guiName = cameraLabel;
             _crossDPAI = crossDPAIonAtStartup;
