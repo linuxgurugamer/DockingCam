@@ -4,11 +4,11 @@ using UnityEngine.UI;
 using System.IO;
 using System.Collections.Generic;
 
-namespace OLDD_camera.Utils 
+namespace OLDD_camera.Utils
 {
     [KSPAddon(KSPAddon.Startup.Flight, true)]
 
-    public class AssetLoader:MonoBehaviour
+    public class AssetLoader : MonoBehaviour
     {
         public static Texture2D texSelfRot = null;
         public static Texture2D texTargetRot = null;
@@ -16,15 +16,17 @@ namespace OLDD_camera.Utils
         public static Texture2D texLampOn = null;
         public static Texture2D texLampOff = null;
         public static Texture2D texDockingCam = null;
-        public static List<Material> materials;
+        public static List<Material> materials = null;
 
         IEnumerator Start()
         {
-            string url = "file://" + KSPUtil.ApplicationRootPath + "GameData/DockingCamKURS/Resources/DockingCam.ksp";
+            string url = "file://" + Path.GetFullPath(KSPUtil.ApplicationRootPath) + "GameData/DockingCamKURS/Resources/DockingCam.ksp";
             //            string url = "file://" + KSPUtil.ApplicationRootPath + "GameData/DockingCamKURS/Resources/dockingcamshaders.shaders";
+
             while (!Caching.ready)
                 yield return null;
-            Debug.Log("OLDD_AssetLoader: Start caching ready");
+
+            Debug.Log("OLDD_AssetLoader: Start caching ready, url: " + url);
 
             // Start a download of the given URL
             WWW www = new WWW(url);
@@ -62,9 +64,9 @@ namespace OLDD_camera.Utils
 
             texSelfRot = (Texture2D)bundle.LoadAsset("selfrot");
             texTargetRot = (Texture2D)bundle.LoadAsset("targetrot");
-            texTargetPoint = (Texture2D)bundle.LoadAsset("targetpoint");     
+            texTargetPoint = (Texture2D)bundle.LoadAsset("targetpoint");
             texLampOn = (Texture2D)bundle.LoadAsset("lampon");
-            texLampOff = (Texture2D)bundle.LoadAsset("lampoff"); 
+            texLampOff = (Texture2D)bundle.LoadAsset("lampoff");
             texDockingCam = (Texture2D)bundle.LoadAsset("dockingcam");
 
             www.Dispose();

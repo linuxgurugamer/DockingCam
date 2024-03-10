@@ -100,7 +100,7 @@ namespace OLDD_camera
                     ConfigNode node = n.GetNode("DockingCamera");
 
                     WindowSizeCoef = int.Parse(node.GetValue("WindowSizeCoef"));
-
+                    WindowSizeCoef = Math.Min(Math.Max(WindowSizeCoef, 2),5);  // Make sure it is between 2 and 5
                     if (node.HasValue("winX"))
                     {
                         windowPosition.x = float.Parse(node.GetValue("winX"));

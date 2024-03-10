@@ -145,38 +145,47 @@ namespace OLDD_camera.Modules
 
         //static int cameraCnt = 0;
         //int thisCamera = -1;
-        public override void OnStart(StartState state)
-        {
-            if (state == StartState.Editor || _camera != null) return;
-
-            if (cameraName != "")
-                _camera = new DockingCamera(this, part,
-                    noise, electricchargeCost, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
-                    _windowSize, restrictShaderTo,
-                    windowLabel, cameraName, slidingOptionWindow, allowZoom,
-                    cameraTransformName);
-            else
-                _camera = new DockingCamera(this, part,
-                    noise, electricchargeCost, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
-                    _windowSize, restrictShaderTo, allowZoom: allowZoom);
-
-            if (cameraLabel != "")
-                Fields["IsEnabled"].guiName = cameraLabel;
-            _crossDPAI = crossDPAIonAtStartup;
-            _crossOLDD = crossOLDDonAtStartup;
-            _targetCrossStock = targetCrossStockOnAtStartup;
-            if (!devMode)
-            {
-                Events["StartCameraAdjuster"].guiActive = false;
-            }
-            _camera.setECusageCost(electricchargeCost);
-        }
+        //public override void OnStart(StartState state)
+        //{
+        //    if (state == StartState.Editor || _camera != null) return;
 
         Animation deployAnim = null;
         public void Start()
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
+                if (cameraName != "")
+                {
+                    _camera = new DockingCamera(this, part,
+                        noise, electricchargeCost, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
+                        _windowSize, restrictShaderTo,
+                        windowLabel, cameraName, slidingOptionWindow, allowZoom,
+                        cameraTransformName);
+                }
+                else
+                {
+                    _camera = new DockingCamera(this, part,
+                        noise, electricchargeCost, targetCrossStockOnAtStartup, crossDPAIonAtStartup, crossOLDDonAtStartup, transformModification,
+                        _windowSize, restrictShaderTo, allowZoom: allowZoom);
+                }
+
+            if (cameraLabel != "")
+                Fields["IsEnabled"].guiName = cameraLabel;
+
+
+            _crossDPAI = crossDPAIonAtStartup;
+            _crossOLDD = crossOLDDonAtStartup;
+            _targetCrossStock = targetCrossStockOnAtStartup;
+#if false
+            if (!devMode)
+            {
+                Debug.Log("OLDD DockingCameraModule 5");
+                Events["StartCameraAdjuster"].guiActive = false;
+            }
+#endif
+            _camera.setECusageCost(electricchargeCost);
+        //}
+
                 //_camera.DoStart();
                 if (deployAnimationName != null)
                 {

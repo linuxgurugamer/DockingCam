@@ -53,6 +53,7 @@ namespace OLDD_camera.Camera
 
         Modules.DockingCameraModule dcm;
 
+#if false
         public void UpdateLocalPosition(Modules.DockingCameraModule dcm)
         {
             //dcm = dcm;
@@ -64,6 +65,7 @@ namespace OLDD_camera.Camera
 
             Noise = dcm.noise;
         }
+#endif
 
         public DockingCamera(OLDD_camera.Modules.DockingCameraModule dcm, Part thisPart,
             bool noise, double electricchargeCost, bool crossStock, bool crossDPAI, bool crossOLDD, bool transformModification,

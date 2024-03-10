@@ -29,7 +29,7 @@ namespace OLDD_camera.Camera
         protected GameObject PartGameObject;
         protected Part ThisPart;
 
-        private Texture _textureBackGroundCamera;
+        //private Texture _textureBackGroundCamera;
         private Texture _textureSeparator;
         private Texture _textureTargetMark;
         internal Texture[] TextureNoSignal;
@@ -184,11 +184,26 @@ namespace OLDD_camera.Camera
             // TexturePosition = new Rect(6, 34, WindowPosition.width - 12f, WindowPosition.height - 40f); //42f);
 
             TexturePosition = new Rect(6, lineHeight + titleHeight, WindowPosition.width - lineHeight, WindowPosition.height - (lineHeight + /*28f +*/ titleHeight + 6f)); //42f);
+
+
             RenderTexture = new RenderTexture((int)WindowSize * 4, (int)WindowSize * 4, 24);//, RenderTextureFormat.RGB565);  
             RenderTexture.active = RenderTexture;
             RenderTexture.Create();
-            _textureBackGroundCamera = Util.MonoColorRectTexture(new Color(0.45f, 0.45f, 0.45f, 1));
-            _textureSeparator = Util.MonoColorVerticalLineTexture(Color.white, (int)TexturePosition.height);
+            //_textureBackGroundCamera = Util.MonoColorRectTexture(new Color(0.45f, 0.45f, 0.45f, 1));
+            try
+            {
+                _textureSeparator = Util.MonoColorVerticalLineTexture(Color.white, (int)TexturePosition.height);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("OLDD.BaseCamera.InitTextures, Exception: : " + e.Message);
+                Debug.Log("OLDD.BaseCamera.InitTextures, TexturePosition.height has invalid value: " + (int)TexturePosition.height);
+                Debug.Log("OLDD.BaseCamera.InitTextures, TexturePosition value: " + TexturePosition);
+                Debug.Log("OLDD.BaseCamera.InitTextures, lineHeight value: " + lineHeight);
+                Debug.Log("OLDD.BaseCamera.InitTextures, titleHeight value: " + titleHeight);
+                TexturePosition.height = 1f;
+            }
+
             _textureTargetMark = AssetLoader.texTargetPoint;
             TextureNoSignal = new Texture[8];
             for (int i = 0; i < TextureNoSignal.Length; i++)
@@ -212,7 +227,7 @@ namespace OLDD_camera.Camera
                         camera.CopyFrom(cameraExample);
                         camera.name = string.Format("{1} copy of {0}", CameraNames[i], WindowCount);
                         camera.targetTexture = RenderTexture;
-                        if (i == 2 && dcm != null &&  dcm.cameraCustomNearClipPlane > 0)
+                        if (i == 2 && dcm != null && dcm.cameraCustomNearClipPlane > 0)
                             camera.nearClipPlane = dcm.cameraCustomNearClipPlane;
                     }
                     return camera;
@@ -320,7 +335,7 @@ namespace OLDD_camera.Camera
                 a.Render();
             }
 
-           imageTexture.ReadPixels(new Rect(0, 0, dcm.cameraHorizontalResolution, dcm.cameraVerticalResolution), 0, 0);
+            imageTexture.ReadPixels(new Rect(0, 0, dcm.cameraHorizontalResolution, dcm.cameraVerticalResolution), 0, 0);
             imageTexture.Apply();
 
             _renderTextureColor.Release();
@@ -349,7 +364,7 @@ namespace OLDD_camera.Camera
          * ************************************************************************************************/
         private void WriteTextureToDrive(Texture2D Input)
         {
-            Util.WritePng(Input, photoDir,  ThisPart.vessel.vesselName);
+            Util.WritePng(Input, photoDir, ThisPart.vessel.vesselName);
         }
 
 
@@ -360,6 +375,8 @@ namespace OLDD_camera.Camera
         /// </summary>
         protected virtual void ExtendedDrawWindowL1()
         {
+            if (AssetLoader.materials == null)
+                return;
             var widthOffset = WindowPosition.width - 90;
             if (HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().useKSPskin)
             {
@@ -376,13 +393,18 @@ namespace OLDD_camera.Camera
                     _isTargetPoint = GUI.Toggle(new Rect(widthOffset - 2, 233, 88, 20), _isTargetPoint, "Target Mark");
             }
             //GUI.DrawTexture(TexturePosition, _textureBackGroundCamera);
+            //Log.Info("ExtendedDrawWindowL1 4, _shaderIndex: " + _shaderIndex);
+            //Log.Info("ExtendedDrawWindowL1 4.1 AssetLoader.materials.Count:" + AssetLoader.materials.Count);
 
             CurrentShader = AssetLoader.materials[_shaderIndex];
+            //Log.Info("ExtendedDrawWindowL1 5");
 
             _currentShaderName = CurrentShader == null ? "none" : CurrentShader.name;
+            //Log.Info("ExtendedDrawWindowL1 6");
 
             if (Event.current.type.Equals(EventType.Repaint))
             {
+                //Log.Info("ExtendedDrawWindowL1 7");
                 Graphics.DrawTexture(TexturePosition, Render(), CurrentShader);
                 if (takePic)
                 {
@@ -442,6 +464,8 @@ namespace OLDD_camera.Camera
         /// </summary>
         protected virtual void ExtendedDrawWindowL3()
         {
+            if (AssetLoader.materials == null)
+                return;
 
             if (!ThisPart.vessel.Equals(FlightGlobals.ActiveVessel))
                 GUI.Label(new Rect(8, 34, 222, 20), "Broadcast from: " + ThisPart.vessel.vesselName, Styles.GreenLabel11);
@@ -528,7 +552,7 @@ namespace OLDD_camera.Camera
             }
             DoResizeWindow(WindowSizeCoef);
         }
-#endregion DRAW LAYERS
+        #endregion DRAW LAYERS
 
         private float GetX(float x, float z)
         {

@@ -181,3 +181,11 @@
 
 1.3.8.5
 	Restored Zoom to docking camera (was disabled for some reason)
+
+1.3.8.6
+	Fixed application path when loading images from disk 
+	Commented out event line which was causing the ec usage to not be set (was also causing an exception)
+
+1.3.8.7 
+	Fixed a couple of nullrefs which occurred when changing scenes to flight while a window was open.
+	Added check when loading config data to ensure that WindowSizeCoef is between 2 and 5
