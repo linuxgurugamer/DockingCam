@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,49 +15,49 @@ namespace OLDD_camera
     // HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings>().
     public class KURSSettings_1 : GameParameters.CustomParameterNode
     {
-        public override string Title { get { return "General"; } }
+        public override string Title { get { return Localizer.Format("#LOC_DockingCam_22"); } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
-        public override string Section { get { return "Docking Camera KURS Style"; } }
-        public override string DisplaySection { get { return "Docking Camera KURS Style"; } }
+        public override string Section { get { return Localizer.Format("#LOC_DockingCam_23"); } }
+        public override string DisplaySection { get { return Localizer.Format("#LOC_DockingCam_23"); } }
         public override int SectionOrder { get { return 1; } }
         public override bool HasPresets { get { return false; } }
 
         [GameParameters.CustomParameterUI("2250",
-            toolTip = "Range of broadcast signal")]
+            toolTip = "#LOC_DockingCam_24")]
         public bool _dist2500 = true;
 
         [GameParameters.CustomParameterUI("9999",
-            toolTip = "Range of broadcast signal")]
+            toolTip = "#LOC_DockingCam_24")]
         public bool _dist9999 = false;
 
 
         [GameParameters.CustomParameterUI("Scale camera capabilites to career mode",
-            toolTip = "In career mode, cameras will initially have limited capabilities")]
+            toolTip = "#LOC_DockingCam_25")]
         public bool scaleToCareer = false;
 
 
         [GameParameters.CustomParameterUI("Cam shutdown if out of range",
-            toolTip = "Range of broadcast signal")]
+            toolTip = "#LOC_DockingCam_24")]
         public bool FCS = false;
 
         [GameParameters.CustomParameterUI("Show cross",
-            toolTip = "Cross lines which indicate info related to docking")]
+            toolTip = "#LOC_DockingCam_26")]
         public bool showCross = true;
 
         [GameParameters.CustomParameterUI("Show summary data",
-            toolTip = "Show Distance and closing Vel in upper-right of window")]
+            toolTip = "#LOC_DockingCam_27")]
         public bool showSummaryData = true;
 
         [GameParameters.CustomParameterUI("Show data",
-            toolTip = "Show docking data in upper-right of window")]
+            toolTip = "#LOC_DockingCam_28")]
         public bool showData = true;
 
         [GameParameters.CustomParameterUI("Show rotator dials",
-            toolTip = "Show dials in bottom of window")]
+            toolTip = "#LOC_DockingCam_29")]
         public bool showDials = true;
 
         [GameParameters.CustomIntParameterUI("Default camera window size", minValue = 1, maxValue = 10,
-            toolTip = "Value will be adjusted down at runtime if too large")]
+            toolTip = "#LOC_DockingCam_30")]
         public int defaultCamWindowSize = 2;
 
 
@@ -68,7 +68,7 @@ namespace OLDD_camera
         public bool hideOnF2 = true;
 
         [GameParameters.CustomParameterUI("Use camera object for adjustments",
-            toolTip = "Only used when using dev mode to adjust a camera's position")]
+            toolTip = "#LOC_DockingCam_31")]
         public bool useCamObj = true;
 
 
@@ -124,15 +124,15 @@ namespace OLDD_camera
 
     public class KURSSettings_2 : GameParameters.CustomParameterNode
     {
-        public override string Title { get { return "Overlay"; } }
+        public override string Title { get { return Localizer.Format("#LOC_DockingCam_32"); } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
-        public override string Section { get { return "Docking Camera KURS Style"; } }
-        public override string DisplaySection { get { return "Docking Camera KURS Style"; } }
+        public override string Section { get { return Localizer.Format("#LOC_DockingCam_23"); } }
+        public override string DisplaySection { get { return Localizer.Format("#LOC_DockingCam_23"); } }
         public override int SectionOrder { get { return 2; } }
         public override bool HasPresets { get { return false; } }
 
         [GameParameters.CustomParameterUI("Use Dehim's changes",
-            toolTip = "Alternate Overlay")]
+            toolTip = "#LOC_DockingCam_33")]
         public bool altOverlay = false;
 
 

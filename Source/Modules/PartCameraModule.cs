@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using KSP.Localization;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using OLDD_camera.Camera;
@@ -15,14 +16,14 @@ namespace OLDD_camera.Modules
     class PartCameraModule : PartModule, ICamPart
     {
         [KSPField(guiActive = true, guiActiveEditor = false, guiName = "Camera", isPersistant = true),
-        UI_Toggle(controlEnabled = true, enabledText = "ON", disabledText = "OFF", scene = UI_Scene.Flight)]
+        UI_Toggle(controlEnabled = true, enabledText = "#LOC_DockingCam_90", disabledText = "#LOC_DockingCam_91", scene = UI_Scene.Flight)]
         public bool IsEnabled;
 
         [KSPField(guiActive = true, guiActiveEditor = true, guiName = "Camera powered ")]
         private string _isPowered;
 
         [KSPField(guiActive = true, guiActiveEditor = true, guiName = "Bullets ")]
-        private string _aboutHits = "4/4";
+        private string _aboutHits = "#LOC_DockingCam_92";
 
         [KSPField(isPersistant = true)]
         private int _currentHits = -1;
@@ -37,17 +38,17 @@ namespace OLDD_camera.Modules
         public int allowedScanDistance = 1000;
 
         [KSPField]
-        public string resourceScanning = "ElectricCharge.50";
+        public string resourceScanning = "#LOC_DockingCam_93";
         
         [KSPField(isPersistant = true)]
         public double electricchargeCost = 0.02d;
 
-        private readonly string _cameraName = "CamExt";
-        private readonly string _rotatorZ = "Case";
-        private readonly string _rotatorY = "Tube";
-        private readonly string _zoommer = "Lenz";
-        private readonly string _cap = "Cap";
-        private readonly string _bulletName = "Sphere";
+        private readonly string _cameraName = Localizer.Format("#LOC_DockingCam_94");
+        private readonly string _rotatorZ = Localizer.Format("#LOC_DockingCam_95");
+        private readonly string _rotatorY = Localizer.Format("#LOC_DockingCam_96");
+        private readonly string _zoommer = Localizer.Format("#LOC_DockingCam_97");
+        private readonly string _cap = Localizer.Format("#LOC_DockingCam_98");
+        private readonly string _bulletName = Localizer.Format("#LOC_DockingCam_99");
         private readonly float _stepper = 1000;
 
         private GameObject _capObject;
@@ -76,7 +77,9 @@ namespace OLDD_camera.Modules
         private float _targetOffset = 100;
 
         [KSPField]
+        #region NO_LOCALIZATION
         public string photoDir = "DockingCam";
+        #endregion
 
 
         [KSPAction("Toggle Camera")]
@@ -111,8 +114,8 @@ namespace OLDD_camera.Modules
 
         public override string GetInfo()
         {
-            return "External camera for various purposes. Provides 'Onboard', 'Look at Me', 'Follow Me' and 'Target Cam' modes. " +
-                   "Can received commands from other vessels in a short distance";
+            return Localizer.Format("#LOC_DockingCam_100") +
+                   Localizer.Format("#LOC_DockingCam_101");
         }
 
         public void Update()
@@ -130,15 +133,15 @@ namespace OLDD_camera.Modules
                 var treshhold = vessel.vesselRanges.orbit.load;
                 if (dist > treshhold*0.99)
                 {
-                    ScreenMessages.PostScreenMessage("FORCED SHUTDOWN", 3f, ScreenMessageStyle.UPPER_CENTER);
+                    ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DockingCam_102"), 3f, ScreenMessageStyle.UPPER_CENTER);
                     _camera.IsButtonOff = true;
                 }
             }
 
-            if (_isPowered == "FALSE")
+            if (_isPowered == Localizer.Format("#LOC_DockingCam_103"))
             {
                 if (IsEnabled)
-                    ScreenMessages.PostScreenMessage("ELECTRICITY HAS BEEN DEPLETED", 3f, ScreenMessageStyle.UPPER_CENTER);
+                    ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DockingCam_104"), 3f, ScreenMessageStyle.UPPER_CENTER);
                 _camera.IsButtonOff = true;
             }
 
@@ -186,7 +189,7 @@ namespace OLDD_camera.Modules
                 TargetCam();
 
             _currentHits = _camera.Hits;
-            _aboutHits = _currentHits + "/4";
+            _aboutHits = _currentHits + Localizer.Format("#LOC_DockingCam_105");
 
             if (IsEnabled)
                 Activate();
@@ -274,7 +277,7 @@ namespace OLDD_camera.Modules
         private void GetElectricState()
         {
             double electricChargeAmount = 0;
-            int electricityId = PartResourceLibrary.Instance.GetDefinition("ElectricCharge").id;
+            int electricityId = PartResourceLibrary.Instance.GetDefinition(Localizer.Format("#LOC_DockingCam_36")).id;
 
             if (HighLogic.LoadedSceneIsEditor)
             {
@@ -296,11 +299,12 @@ namespace OLDD_camera.Modules
             }
             
             if (electricChargeAmount > 0)
-                _isPowered = IsEnabled ? "ONLINE" : "TRUE";
+                _isPowered = IsEnabled ? Localizer.Format("#LOC_DockingCam_106") : Localizer.Format("#LOC_DockingCam_107");
             else
-                _isPowered = "FALSE";
+                _isPowered = Localizer.Format("#LOC_DockingCam_103");
         }
 
+        #region NO_LOCALIZATION
         public void Activate()
         {
             if (!HighLogic.LoadedSceneIsFlight) return;
@@ -323,6 +327,8 @@ namespace OLDD_camera.Modules
 
             if (!IsEnabled) StartCoroutine("CapRotator");
         }
+
+        #endregion
         private IEnumerator CapRotator()
         {
             int step = _camera.IsActive ? 5 : -5;

@@ -27,6 +27,7 @@ namespace OLDD_camera
         internal static String _AssemblyFolder
         { get { return System.IO.Path.GetDirectoryName(_AssemblyLocation); } }
 
+        #region NO_LOCALIZATION
         /// <summary>
         /// Location of file for saving and loading methods
         ///
@@ -64,6 +65,8 @@ namespace OLDD_camera
             n.AddNode(node);
             n.Save(FilePath);
         }
+
+        #endregion
 
         internal static void SaveWinSettings(/* bool s0, bool s1, bool s2, */ Rect win)
         {

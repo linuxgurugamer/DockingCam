@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using KSP.Localization;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
@@ -56,7 +57,7 @@ namespace OLDD_camera.Utils
             }
 
             Log.Info("materials.Count: " + materials.Count);
-            var index = materials.FindIndex(x => x.name.Contains("None"));
+            var index = materials.FindIndex(x => x.name.Contains(Localizer.Format("#LOC_DockingCam_108")));
             var item = materials[index];
             materials[index] = materials[0];
             materials[0] = item;

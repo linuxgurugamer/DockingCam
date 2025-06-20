@@ -10,6 +10,7 @@ public static class DrawTools
 
     private static int glDepth = 0;
 
+    #region NO_LOCALIZATION
     private static Material material
     {
         get
@@ -18,6 +19,7 @@ public static class DrawTools
             return _material;
         }
     }
+    #endregion
 
     // Ok that's cheap but I did not want to add a bunch 
     // of try catch to make sure the GL calls ends.

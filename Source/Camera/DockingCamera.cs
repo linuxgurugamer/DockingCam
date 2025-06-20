@@ -1,9 +1,9 @@
-﻿using System;
+using KSP.Localization;
+using OLDD_camera.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using OLDD_camera.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace OLDD_camera.Camera
 {
@@ -67,6 +67,7 @@ namespace OLDD_camera.Camera
         }
 #endif
 
+        #region NO_LOCALIZATION
         public DockingCamera(OLDD_camera.Modules.DockingCameraModule dcm, Part thisPart,
             bool noise, double electricchargeCost, bool crossStock, bool crossDPAI, bool crossOLDD, bool transformModification,
             int windowSize, string restrictShaderTo,
@@ -147,7 +148,10 @@ namespace OLDD_camera.Camera
                 Log.Info("DockingCamera.UpdatePositionAndRotation 3");
             }
         }
+
+
 #endif
+
 
 #if false
        public void DoStart()
@@ -164,6 +168,7 @@ namespace OLDD_camera.Camera
         }
 #endif
 
+        #endregion
 
         private void LevelWasLoaded(GameScenes data)
         {
@@ -209,7 +214,7 @@ namespace OLDD_camera.Camera
             {
                 if (dcm.isDockingNode)
                 {
-                    TargetCrossStock = GUI.Toggle(new Rect(widthOffset, 124, 88, 20), TargetCrossStock, "Cross: stock");
+                    TargetCrossStock = GUI.Toggle(new Rect(widthOffset, 124, 88, 20), TargetCrossStock, Localizer.Format("#LOC_DockingCam_41"));
                     //if (TargetCrossStock)
                     //    TargetCrossDPAI = TargetCrossOLDD = false;
                     if (ThisPart.vessel.Equals(FlightGlobals.ActiveVessel) && TargetHelper.IsTargetSelect)
@@ -217,25 +222,25 @@ namespace OLDD_camera.Camera
 
                         if (_target != null && _target.IsDockPort)
                         {
-                            TargetCrossDPAI = GUI.Toggle(new Rect(widthOffset, 64, 88, 20), TargetCrossDPAI, "Cross: DPAI");
+                            TargetCrossDPAI = GUI.Toggle(new Rect(widthOffset, 64, 88, 20), TargetCrossDPAI, Localizer.Format("#LOC_DockingCam_42"));
                             //if (TargetCrossDPAI)
                             //    TargetCrossStock = TargetCrossOLDD = false;
 
-                            TargetCrossOLDD = GUI.Toggle(new Rect(widthOffset, 84, 88, 20), TargetCrossOLDD, "Cross: KURS");
+                            TargetCrossOLDD = GUI.Toggle(new Rect(widthOffset, 84, 88, 20), TargetCrossOLDD, Localizer.Format("#LOC_DockingCam_43"));
                             //if (TargetCrossOLDD)
                             //    TargetCrossStock = TargetCrossDPAI = false;
 
-                            _cameraData = GUI.Toggle(new Rect(widthOffset, 144, 88, 20), _cameraData, "Flight data");
-                            _rotatorState = GUI.Toggle(new Rect(widthOffset, 164, 88, 20), _rotatorState, "Rotator");
+                            _cameraData = GUI.Toggle(new Rect(widthOffset, 144, 88, 20), _cameraData, Localizer.Format("#LOC_DockingCam_44"));
+                            _rotatorState = GUI.Toggle(new Rect(widthOffset, 164, 88, 20), _rotatorState, Localizer.Format("#LOC_DockingCam_45"));
                         }
                         else
-                            GUI.Label(new Rect(widthOffset, 174, 88, 60), " Select\n docking\n port", Styles.RedLabel13B);
+                            GUI.Label(new Rect(widthOffset, 174, 88, 60), Localizer.Format("#LOC_DockingCam_46"), Styles.RedLabel13B);
                     }
-                    Noise = GUI.Toggle(new Rect(widthOffset, 253, 88, 20), Noise, "Noise");
+                    Noise = GUI.Toggle(new Rect(widthOffset, 253, 88, 20), Noise, Localizer.Format("#LOC_DockingCam_47"));
                 }
                 if (dcm != null && dcm.canTakePicture)
                 {
-                    if (GUI.Button(new Rect(widthOffset, 84, 88, 20), "PHOTO"))
+                    if (GUI.Button(new Rect(widthOffset, 84, 88, 20), Localizer.Format("#LOC_DockingCam_48")))
                     {
                         base.takePic = true;
                     }
@@ -264,7 +269,10 @@ namespace OLDD_camera.Camera
                 if (_target.IsMoveToTarget)
                 {
                     GUI.DrawTexture(new Rect(TexturePosition.xMin + 20, TexturePosition.yMax - 20, 20, 20), AssetLoader.texLampOn);
-                    GUI.Label(new Rect(TexturePosition.xMin + 40, TexturePosition.yMax - 20, 140, 20), $"Time to dock:{_target.SecondsToDock:f0}s");
+                    GUI.Label(new Rect(TexturePosition.xMin + 40, TexturePosition.yMax - 20, 140, 20), Localizer.Format("#LOC_DockingCam_49") +
+                    #region NO_LOCALIZATION
+                        $"{_target.SecondsToDock:f0}s");
+                    #endregion
                 }
                 else
                     GUI.DrawTexture(new Rect(TexturePosition.xMin + 20, TexturePosition.yMax - 20, 20, 20), AssetLoader.texLampOff);
@@ -320,7 +328,7 @@ namespace OLDD_camera.Camera
                 if (dcm.isDockingNode && TargetHelper.IsTargetSelect) // && thisPart.vessel.Equals(FlightGlobals.ActiveVessel))
                 {
                     _lastVesselName = TargetHelper.Target.GetName();
-                    _windowLabelSuffix = " to " + _lastVesselName;
+                    _windowLabelSuffix = Localizer.Format("#LOC_DockingCam_50") + _lastVesselName;
                     WindowLabel = SubWindowLabel + " " + _id + _windowLabelSuffix;
                 }
                 else
@@ -396,35 +404,39 @@ namespace OLDD_camera.Camera
 
                 if (!_target.IsDockPort)
                 {
-                    GUI.Label(new Rect(TexturePosition.xMin + 2, 34, 100, 40), "Target is not\n a DockPort");
+                    GUI.Label(new Rect(TexturePosition.xMin + 2, 34, 100, 40), Localizer.Format("#LOC_DockingCam_51"));
                     if (_target.Destination < 200f)
-                        GUI.Label(new Rect(TexturePosition.xMin + 2, 68, 100, 40), "DockPort is\n available", Styles.GreenLabel11);
+                        GUI.Label(new Rect(TexturePosition.xMin + 2, 68, 100, 40), Localizer.Format("#LOC_DockingCam_52"), Styles.GreenLabel11);
                 }
                 else
-                    GUI.Label(new Rect(TexturePosition.xMin + 2, 34, 100, 40), "DockPort captured", Styles.GreenLabel13);
+                    GUI.Label(new Rect(TexturePosition.xMin + 2, 34, 100, 40), Localizer.Format("#LOC_DockingCam_53"), Styles.GreenLabel13);
 
                 // Flight DATA
+                #region NO_LOCALIZATION
                 var dataFormat = Math.Abs(_target.Destination) < 1000 ? "{0:f2}" : "{0:f0}";
+                #endregion
+
                 var stringOffset = 16;
 
                 if (!HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_2>().altOverlay)
                 {
                     if (HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showSummaryData)
                     {
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format("Dist:" + dataFormat, _target.Destination), Styles.Label13B);
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format(Localizer.Format("#LOC_DockingCam_54") + dataFormat, _target.Destination), Styles.Label13B);
 
                         GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20),
-                            string.Format("Vel:" + dataFormat, _target.closureRate), Styles.Label13B);
+                            string.Format(Localizer.Format("#LOC_DockingCam_55") + dataFormat, _target.closureRate), Styles.Label13B);
 
                         i += .2f;
                     }
                     if (HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showData)
                     {
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format("dX:" + dataFormat, _target.DX));
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format("dY:" + dataFormat, _target.DY));
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format("dZ:" + dataFormat, _target.DZ));
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format(Localizer.Format("#LOC_DockingCam_56") + dataFormat, _target.DX));
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format(Localizer.Format("#LOC_DockingCam_57") + dataFormat, _target.DY));
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format(Localizer.Format("#LOC_DockingCam_58") + dataFormat, _target.DZ));
                         i += .2f;
 
+                        #region NO_LOCALIZATION
                         if (Math.Abs(_target.SpeedX) > _maxSpeed && Math.Abs(_target.Destination) < 200)
                             GUI.Label(new Rect(TexturePosition.xMax - 70, 38 + i++ * stringOffset, 70, 20), $"vX:{_target.SpeedX:f2}", Styles.RedLabel13);
                         else
@@ -440,21 +452,32 @@ namespace OLDD_camera.Camera
                         else
                             GUI.Label(new Rect(TexturePosition.xMax - 70, 38 + i++ * stringOffset, 70, 20), $"vZ:{_target.SpeedZ:f2}", Styles.Label13);
                         i += .2f;
+                        #endregion
 
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), $"Yaw:{_target.AngleX:f0}°");
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), $"Pitch:{_target.AngleY:f0}°");
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), $"Roll:{_target.AngleZ:f0}°");
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), Localizer.Format("#LOC_DockingCam_59")+
+                        #region NO_LOCALIZATION
+                            $"{_target.AngleX:f0}°");
+                        #endregion
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), Localizer.Format("#LOC_DockingCam_60")+
+                        #region NO_LOCALIZATION
+                            $"{_target.AngleY:f0}°");
+                        #endregion
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), Localizer.Format("#LOC_DockingCam_61")+
+                        #region NO_LOCALIZATION
+                            $"{_target.AngleZ:f0}°");
+                        #endregion
                     }
                 }
                 else
                 {
                     if (HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showData)
                     {
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format("dX:" + dataFormat, -_target.DPos.x));
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format("dY:" + dataFormat, -_target.DPos.y));
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format("dZ:" + dataFormat, -_target.DPos.z));
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format(Localizer.Format("#LOC_DockingCam_56") + dataFormat, -_target.DPos.x));
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format(Localizer.Format("#LOC_DockingCam_57") + dataFormat, -_target.DPos.y));
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 34 + i++ * stringOffset, 70, 20), string.Format(Localizer.Format("#LOC_DockingCam_58") + dataFormat, -_target.DPos.z));
                         i += .2f;
 
+                        #region NO_LOCALIZATION
                         if (Math.Abs(_target.Velocity.x) > _maxSpeed && Math.Abs(_target.Destination) < 200)
                             GUI.Label(new Rect(TexturePosition.xMax - 70, 38 + i++ * stringOffset, 70, 20), $"vX:{_target.Velocity.x:f2}", Styles.RedLabel13);
                         else
@@ -470,10 +493,20 @@ namespace OLDD_camera.Camera
                         else
                             GUI.Label(new Rect(TexturePosition.xMax - 70, 38 + i++ * stringOffset, 70, 20), $"vZ:{_target.Velocity.z:f2}", Styles.Label13);
                         i += .2f;
+                        #endregion
 
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), $"Yaw:{_target.AngleY:f0}°");
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), $"Pitch:{_target.AngleX:f0}°");
-                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i * stringOffset, 70, 20), $"Roll:{_target.AngleZ:f0}°");
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), Localizer.Format("#LOC_DockingCam_59")+
+                        #region NO_LOCALIZATION
+                            $"{_target.AngleY:f0}°");
+                        #endregion
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i++ * stringOffset, 70, 20), Localizer.Format("#LOC_DockingCam_60")+
+                        #region NO_LOCALIZATION
+                            $"{_target.AngleX:f0}°");
+                        #endregion
+                        GUI.Label(new Rect(TexturePosition.xMax - 70, 40 + i * stringOffset, 70, 20), Localizer.Format("#LOC_DockingCam_61")+
+                        #region NO_LOCALIZATION
+                            $"{_target.AngleZ:f0}°");
+                        #endregion
                     }
                 }
             }

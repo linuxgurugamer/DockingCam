@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using KSP.IO;
+using KSP.Localization;
+using ClickThroughFix;
 using KSP.UI.Screens;
 using OLDD_camera.Camera;
 using OLDD_camera.Modules;
 using OLDD_camera.Utils;
+using System.Collections.Generic;
 using ToolbarControl_NS;
 using UnityEngine;
-using ClickThroughFix;
 
 namespace OLDD_camera
 {
@@ -131,6 +131,7 @@ namespace OLDD_camera
         internal const string MODID = "Docking_Camera_KURS";
         internal const string MODNAME = "Docking Camera KURS";
 
+        #region NO_LOCALIZATION
         private void OnAppLauncherReady()
         {
             if (toolbarControl != null) return;
@@ -143,6 +144,7 @@ namespace OLDD_camera
                 "DockingCamKURS/Icons/DockingCamIcon",
                 MODNAME);
         }
+        #endregion
 
         private static void OnWindowOLDD()
         {
@@ -153,38 +155,38 @@ namespace OLDD_camera
             _windowPosition.height = 140 + height + 10 + 60;
             _windowPosition.width += 50;
 
-            _windowPosition = Util.ConstrainToScreen(ClickThruBlocker.GUIWindow(BaseCamera.SettingsWinID, _windowPosition, DrawOnWindowOLDD, "KURS Camera Info"), 100);
+            _windowPosition = Util.ConstrainToScreen(ClickThruBlocker.GUIWindow(BaseCamera.SettingsWinID, _windowPosition, DrawOnWindowOLDD, Localizer.Format("#LOC_DockingCam_1")), 100);
         }
 
         private static void OnWindowAltHelp()
         {
-            helpWindowPosition = ClickThruBlocker.GUIWindow(BaseCamera.HelpWinId, helpWindowPosition, DrawOnWindowAltHelp, "Alternate Overlay Help");
+            helpWindowPosition = ClickThruBlocker.GUIWindow(BaseCamera.HelpWinId, helpWindowPosition, DrawOnWindowAltHelp, Localizer.Format("#LOC_DockingCam_2"));
 
         }
         private static string vesselStr(int i)
         {
             if (i == 1)
-                return "vessel";
+                return Localizer.Format("#LOC_DockingCam_3");
             else
-                return "vessels";
+                return Localizer.Format("#LOC_DockingCam_4");
         }
         private static void DrawOnWindowAltHelp(int winId)
         {
             //GUILayout.BeginHorizontal();
             //GUILayout.BeginVertical();
-            GUILayout.Label("The following fields are shown:");
-            GUILayout.Label("dX, dY, dZ  are the x, y, z distances relative to the current docking port.");
-            GUILayout.Label("vX, vY, vZ are the velocities in each  plane.");
+            GUILayout.Label(Localizer.Format("#LOC_DockingCam_5"));
+            GUILayout.Label(Localizer.Format("#LOC_DockingCam_6"));
+            GUILayout.Label(Localizer.Format("#LOC_DockingCam_7"));
 
-            GUILayout.Label("The red/green crosshair shows the current velocity. It turns green when the target docking port is in front of you in the z axis and it turns red when it's behind you. ");
+            GUILayout.Label(Localizer.Format("#LOC_DockingCam_8"));
 
-            GUILayout.Label("The yellow/magenta crosshair basically shows the current velocity. It turns yellow when you're moving forward in the z dimension and it turns magenta when you're moving backward in the z dimension. Neither of the crosshairs can ever leave the window.");
+            GUILayout.Label(Localizer.Format("#LOC_DockingCam_9"));
 
-            GUILayout.Label("Yaw is the horizontal angle between the two docking ports");
-            GUILayout.Label("Pitch is the fore/aft angle between the two docking ports");
+            GUILayout.Label(Localizer.Format("#LOC_DockingCam_10"));
+            GUILayout.Label(Localizer.Format("#LOC_DockingCam_11"));
             GUILayout.Label("Roll is the difference in lining up the two docking ports rotationally");
-            GUILayout.Label("\nThis alternate mode written and contributed by forum user @Dehim (github user @Dehim1)\n");
-            if (GUILayout.Button("Close"))
+            GUILayout.Label(Localizer.Format("#LOC_DockingCam_12"));
+            if (GUILayout.Button(Localizer.Format("#LOC_DockingCam_13")))
                 altOverlayHelpVisible = false;
             //GUILayout.EndHorizontal();
             //GUILayout.EndVertical();
@@ -206,15 +208,15 @@ I've really found this mod mod makes docking a whole lot easier. All you have to
         private static void DrawOnWindowOLDD(int windowID)
         {
             var checkDist = FlightGlobals.ActiveVessel.vesselRanges.landed.load;
-            var unloadDistance = "Unload at: " + FlightGlobals.ActiveVessel.vesselRanges.landed.load;
+            var unloadDistance = Localizer.Format("#LOC_DockingCam_14") + FlightGlobals.ActiveVessel.vesselRanges.landed.load;
             GUILayout.Label(unloadDistance, Styles.Label13B);
 
             var vessels = _vesselsWithCamera;
             vessels.Remove(FlightGlobals.ActiveVessel);
             //DockCamToolbarButton.instance.NewVesselCreated(FlightGlobals.ActiveVessel);
 
-            GUILayout.Label(" " + _vesselsWithAttachedCamera.Count + " " + vesselStr(_vesselsWithAttachedCamera.Count) + " w/camera in range ", Styles.GreenLabel15B);
-            GUILayout.Label(" " + _vesselsWithDockingCamera.Count + " " + vesselStr(_vesselsWithDockingCamera.Count) + " w/docking cam in range ", Styles.GreenLabel15B);
+            GUILayout.Label(" " + _vesselsWithAttachedCamera.Count + " " + vesselStr(_vesselsWithAttachedCamera.Count) + Localizer.Format("#LOC_DockingCam_15"), Styles.GreenLabel15B);
+            GUILayout.Label(" " + _vesselsWithDockingCamera.Count + " " + vesselStr(_vesselsWithDockingCamera.Count) + Localizer.Format("#LOC_DockingCam_16"), Styles.GreenLabel15B);
 
             if (vessels.Count > 1)
             {
@@ -223,7 +225,7 @@ I've really found this mod mod makes docking a whole lot easier. All you have to
                     var i = vessels.IndexOf(vessel) + 1;
                     var range = Mathf.Round(Vector3.Distance(vessel.transform.position, FlightGlobals.ActiveVessel.transform.position));
                     var situation = vessel.RevealSituationString();
-                    var str = $"{i}. {vessel.vesselName} ({range:N} m) - {situation} ";
+                    var str = $"{i}" + "." + " {v}" + "ssel.vesselName" + "}" +  "(" + "{r}" + "nge:N" + "}" +  "m) -" + " {s}" + "tuation" + "}";
                     if (range <= checkDist)
                         GUILayout.Label(str, Styles.GreenLabel13);
                     else
@@ -231,17 +233,17 @@ I've really found this mod mod makes docking a whole lot easier. All you have to
                 }
             }
             HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showCross =
-                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showCross, "Show crosses");
+                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showCross, Localizer.Format("#LOC_DockingCam_17"));
             HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showSummaryData =
-                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showSummaryData, "Show summary data");
+                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showSummaryData, Localizer.Format("#LOC_DockingCam_18"));
             HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showData =
-                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showData, "Show detailed data");
+                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showData, Localizer.Format("#LOC_DockingCam_19"));
             HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showDials =
-                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showDials, "Show rotator dials");
+                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_1>().showDials, Localizer.Format("#LOC_DockingCam_20"));
 
             HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_2>().altOverlay =
-                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_2>().altOverlay, "Use Alternate Overlay");
-            if (GUILayout.Button("Alternate Overlay Help"))
+                GUILayout.Toggle(HighLogic.CurrentGame.Parameters.CustomParams<KURSSettings_2>().altOverlay, Localizer.Format("#LOC_DockingCam_21"));
+            if (GUILayout.Button(Localizer.Format("#LOC_DockingCam_2")))
             {
                 altOverlayHelpVisible = !altOverlayHelpVisible;
             }
@@ -281,6 +283,7 @@ I've really found this mod mod makes docking a whole lot easier. All you have to
             {
                 foreach (var vessel in _vesselsWithCamera)
                 {
+                    #region NO_LOCALIZATION
 #if false
                     LogRanges("DefaultRanges.subOrbital: " , DefaultRanges.subOrbital);
                     LogRanges("DefaultRanges.landed: " , DefaultRanges.landed);
@@ -289,6 +292,8 @@ I've really found this mod mod makes docking a whole lot easier. All you have to
                     LogRanges("DefaultRanges.prelaunch: " , DefaultRanges.prelaunch);
                     LogRanges("DefaultRanges.splashed: " , DefaultRanges.splashed);
 #endif
+                    #endregion
+
                     vessel.vesselRanges.subOrbital = DefaultRanges.subOrbital;
                     vessel.vesselRanges.landed = DefaultRanges.landed;
                     vessel.vesselRanges.escaping = DefaultRanges.escaping;

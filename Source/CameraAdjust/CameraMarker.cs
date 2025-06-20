@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace OLDD_camera.CameraAdjust
 
         public void LinkPart(Modules.DockingCameraModule newDCM)
         {
-            print("Linking part");
+            print(Localizer.Format("#LOC_DockingCam_88"));
             _dcm = newDCM;
             transform.position = _dcm._camera._moduleDockingNodeGameObject.transform.position;
         }

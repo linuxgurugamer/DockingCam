@@ -4,6 +4,7 @@ using UnityEngine;
 using ClickThroughFix;
 using OLDD_camera.Utils;
 
+#region NO_LOCALIZATION
 #if false
 namespace OLDD_camera.CameraAdjust
 {
@@ -419,3 +420,4 @@ namespace OLDD_camera.CameraAdjust
     }
 }
 #endif
+#endregion

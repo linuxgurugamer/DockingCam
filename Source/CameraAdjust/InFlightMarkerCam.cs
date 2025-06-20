@@ -1,4 +1,5 @@
-﻿
+
+using KSP.Localization;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace OLDD_camera.CameraAdjust
 
         public void Start()
         {
-            print("InFlightMarkerCam::Start");
+            print(Localizer.Format("#LOC_DockingCam_89"));
             CreateMarkerCam();
             GameEvents.onVesselChange.Add(OnVesselChange);
         }
@@ -65,6 +66,7 @@ namespace OLDD_camera.CameraAdjust
             _markerCamObject = null;
         }
 
+            #region NO_LOCALIZATION
         private void CreateMarkerCam()
         {
             if (null != _markerCamObject) return;
@@ -100,6 +102,7 @@ namespace OLDD_camera.CameraAdjust
             }
             return null;
         }
+        #endregion
 
         private void OnVesselChange(Vessel data)
         {

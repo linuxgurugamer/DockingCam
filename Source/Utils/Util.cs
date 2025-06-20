@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.IO;
 using System.Text;
 using OLDD_camera.Camera;
@@ -41,8 +42,8 @@ namespace OLDD_camera.Utils
 
     public static class Util
     {
-        private static string dataTexturePath = "DockingCamKURS/";
-        private static string PhotoDirectory = "Screenshots";
+        private const string dataTexturePath = "DockingCamKURS/";
+        private const string PhotoDirectory = "Screenshots";
 
         public static Texture2D LoadTexture(string name)
         {
@@ -109,27 +110,31 @@ namespace OLDD_camera.Utils
             var time = Planetarium.fetch.time;
             var photoTime = GetTimeMark(time);
             var bytes = texture.EncodeToPNG();
-            var name = string.Concat("Photo from ", photoFrom, " at UT ", photoTime, ".png");
+            var name = string.Concat(Localizer.Format("#LOC_DockingCam_109"), photoFrom, Localizer.Format("#LOC_DockingCam_110"), photoTime,
+            #region NO_LOCALIZATION
+                ".png");
+            #endregion
+
             var folder = Path.Combine(PhotoDirectory, HighLogic.SaveFolder, dir);
             Directory.CreateDirectory(folder);
             name = Path.Combine(folder,  name);
             File.WriteAllBytes(name, bytes);
-            ScreenMessages.PostScreenMessage("PHOTO HAS BEEN SAVED TO YOUR SCREENSHOTS FOLDER", 3f, ScreenMessageStyle.UPPER_CENTER);
+            ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DockingCam_111"), 3f, ScreenMessageStyle.UPPER_CENTER);
         }
         public static string GetTimeMark(double universalTime)
         {
             var time = universalTime;
             var timeMark = new StringBuilder();
             if (time >= 9201600)
-                time = Converter(time, timeMark, 9201600, "y");
+                time = Converter(time, timeMark, 9201600, Localizer.Format("#LOC_DockingCam_112"));
             if (time >= 21600)
                 time = Converter(time, timeMark, 21600, "d");
             if (time >= 3600)
-                time = Converter(time, timeMark, 3600, "h");
+                time = Converter(time, timeMark, 3600, Localizer.Format("#LOC_DockingCam_113"));
             if (time >= 60)
-                time = Converter(time, timeMark, 60, "m");
+                time = Converter(time, timeMark, 60, Localizer.Format("#LOC_DockingCam_114"));
             timeMark.Append(time.ToString("F0"));
-            timeMark.Append("s");
+            timeMark.Append(Localizer.Format("#LOC_DockingCam_115"));
             return timeMark.ToString();
         }
 

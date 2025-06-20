@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using KSP.Localization;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using OLDD_camera.Utils;
@@ -80,11 +81,13 @@ namespace OLDD_camera.Camera
             set { CurrentZoom = value; }
         }
 
+        #region NO_LOCALIZATION
         public PartCamera(Part thisPart, string resourceScanning, double electricchargeCost, string bulletName, int hits,
                 string rotatorZ, string rotatorY, string zoommer, float stepper, string cameraName, int allowedScanDistance,
                 int windowSize, bool isOnboard, bool isLookAtMe, bool isLookAtMeAutoZoom, bool isFollowMe, bool isTargetCam,
                 float isFollowMeOffsetX, float isFollowMeOffsetY, float isFollowMeOffsetZ, float targetOffset, string restrictShaderTo,
                 string windowLabel = "Camera") : base(thisPart, windowSize, windowLabel)
+        #endregion
         {
             var splresource = resourceScanning.Split('.').ToList();
             _resourceName = splresource[0];
@@ -198,22 +201,31 @@ namespace OLDD_camera.Camera
                     DrawModeDataBlock(widthOffset);
 
                 DrawModeSelector(widthOffset);
-                ZoomMultiplier = GUI.Toggle(new Rect(widthOffset, 112, 80, 20), ZoomMultiplier, " x 24");
+                ZoomMultiplier = GUI.Toggle(new Rect(widthOffset, 112, 80, 20), ZoomMultiplier, Localizer.Format("#LOC_DockingCam_62"));
 
                 if (IsOnboard)
                 {
-                    GUI.Label(new Rect(widthOffset, 148, 80, 20), $"rotateZ: {_simplifiedRotateZBuffer:F0}°");
-                    GUI.Label(new Rect(widthOffset, 164, 80, 20), $"rotateY: {_rotateYbuffer:F0}°");
+                    GUI.Label(new Rect(widthOffset, 148, 80, 20), Localizer.Format("#LOC_DockingCam_63") +
+                    #region NO_LOCALIZATION
+                        $"{_simplifiedRotateZBuffer:F0}°");
+                    #endregion
+                    GUI.Label(new Rect(widthOffset, 164, 80, 20), Localizer.Format("#LOC_DockingCam_64") +
+                    #region NO_LOCALIZATION
+                        $"{_rotateYbuffer:F0}°");
+                    #endregion
                 }
 
-                if (GUI.Button(new Rect(widthOffset, 186, 80, 25), "PHOTO"))
+                if (GUI.Button(new Rect(widthOffset, 186, 80, 25), Localizer.Format("#LOC_DockingCam_48")))
                     RenderTexture.SavePng(photoDir, ThisPart.vessel.vesselName);
             }
 
             if ((IsOnboard || IsLookAtMe) && (FlightGlobals.ActiveVessel == ThisPart.vessel))
-                _isVisibilityRay = GUI.Toggle(new Rect(widthOffset - 2, 215, 80, 20), _isVisibilityRay, "Target Ray");
+                _isVisibilityRay = GUI.Toggle(new Rect(widthOffset - 2, 215, 80, 20), _isVisibilityRay, Localizer.Format("#LOC_DockingCam_65"));
 
-            GUI.Label(new Rect(widthOffset, 312, 80, 20), $"Bullets: {Hits:F0}", Styles.Label13B);
+            GUI.Label(new Rect(widthOffset, 312, 80, 20), Localizer.Format("#LOC_DockingCam_66") +
+            #region NO_LOCALIZATION
+                $"{Hits:F0}", Styles.Label13B);
+            #endregion
             base.ExtendedDrawWindowL1();
         }
 
@@ -226,14 +238,14 @@ namespace OLDD_camera.Camera
                     Graphics.DrawTexture(TexturePosition, TextureNoSignal[TextureNoSignalId]);
                 }
                 GUI.Label(new Rect(TexturePosition.xMin + 32 * WindowSizeCoef, TexturePosition.yMin + 32 * WindowSizeCoef, 160, 160),
-                "TARGET \n IS \n OUT OF RANGE", Styles.RedLabel25B);
+                Localizer.Format("#LOC_DockingCam_67"), Styles.RedLabel25B);
             }
             base.ExtendedDrawWindowL2();
         }
 
         protected override void ExtendedDrawWindowL3()
         {
-            var str = "Mode: " + _cameraMode + " ( x " + CalculatedZoom + " )";
+            var str = Localizer.Format("#LOC_DockingCam_68") + _cameraMode + Localizer.Format("#LOC_DockingCam_69") + CalculatedZoom + " )";
             GUI.Label(new Rect(TexturePosition.xMin + 44 * WindowSizeCoef, TexturePosition.yMax - 12, 160, 20),
                 str, Styles.GreenLabel11);
             base.ExtendedDrawWindowL3();
@@ -265,11 +277,11 @@ namespace OLDD_camera.Camera
                 if (ThisPart.vessel.Equals(FlightGlobals.ActiveVessel))
                 {
                     if (!TargetHelper.IsTargetSelect)
-                        ScreenMessages.PostScreenMessage("NO TARGET FOR SCANNING", 3f, ScreenMessageStyle.UPPER_CENTER);
+                        ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DockingCam_70"), 3f, ScreenMessageStyle.UPPER_CENTER);
                     else
                     {
                         if (Hits <= 0)
-                            ScreenMessages.PostScreenMessage("BULLETS DEPLETED", 3f, ScreenMessageStyle.UPPER_CENTER);
+                            ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DockingCam_71"), 3f, ScreenMessageStyle.UPPER_CENTER);
                         else
                         {
                             var id = PartResourceLibrary.Instance.GetDefinition(_resourceName).id;
@@ -287,7 +299,7 @@ namespace OLDD_camera.Camera
                                 _isScienceActivate = false;
                             }
                             else
-                                ScreenMessages.PostScreenMessage("NOT ENOUGH ELECTRICITY FOR SCAN", 3f, ScreenMessageStyle.UPPER_CENTER);
+                                ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DockingCam_72"), 3f, ScreenMessageStyle.UPPER_CENTER);
                         }
                         //if (HitCounter() && UseResourceForScanning())
                         //{
@@ -298,8 +310,9 @@ namespace OLDD_camera.Camera
                     }
                 }
                 else
-                    ScreenMessages.PostScreenMessage("Camera not on active vessel", 3f, ScreenMessageStyle.UPPER_CENTER);
+                    ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DockingCam_73"), 3f, ScreenMessageStyle.UPPER_CENTER);
             }
+            #region NO_LOCALIZATION
             if (GUI.RepeatButton(new Rect(widthOffset, 36 + ButtonSize, ButtonSize, ButtonSize), "←"))
             {
                 switch (_alignment)
@@ -363,20 +376,21 @@ namespace OLDD_camera.Camera
                 if (CurrentZoom < MinZoom)
                     CurrentZoom = MinZoom;
             }
+            #endregion
         }
 
         private void DrawModeDataBlock(float widthOffset)
         {
             if (IsLookAtMe)
             {
-                GUI.Box(new Rect(widthOffset - 2, 36, 86, 76), "Look At Me");
-                GUI.Label(new Rect(widthOffset + 2, 55, 84, 44), "Focus on:\n" + FlightGlobals.ActiveVessel.vesselName, Styles.GreenLabel13);
-                IsLookAtMeAutoZoom = GUI.Toggle(new Rect(widthOffset, 90, 86, 20), IsLookAtMeAutoZoom, "AutoZoom");
+                GUI.Box(new Rect(widthOffset - 2, 36, 86, 76), Localizer.Format("#LOC_DockingCam_74"));
+                GUI.Label(new Rect(widthOffset + 2, 55, 84, 44), Localizer.Format("#LOC_DockingCam_75") + FlightGlobals.ActiveVessel.vesselName, Styles.GreenLabel13);
+                IsLookAtMeAutoZoom = GUI.Toggle(new Rect(widthOffset, 90, 86, 20), IsLookAtMeAutoZoom, Localizer.Format("#LOC_DockingCam_76"));
             }
 
             if (IsFollowMe)
             {
-                GUI.Box(new Rect(widthOffset - 2, 36, 86, 76), "Offset X,Y,Z");
+                GUI.Box(new Rect(widthOffset - 2, 36, 86, 76), Localizer.Format("#LOC_DockingCam_77"));
                 IsFollowMeOffsetX = GUI.HorizontalSlider(new Rect(widthOffset + 1, 58, 80, 10), IsFollowMeOffsetX, -80, 80);
                 IsFollowMeOffsetY = GUI.HorizontalSlider(new Rect(widthOffset + 1, 74, 80, 10), IsFollowMeOffsetY, -80, 80);
                 IsFollowMeOffsetZ = GUI.HorizontalSlider(new Rect(widthOffset + 1, 90, 80, 10), IsFollowMeOffsetZ, -80, 80);
@@ -384,16 +398,16 @@ namespace OLDD_camera.Camera
 
             if (IsTargetCam)
             {
-                GUI.Box(new Rect(widthOffset - 2, 36, 86, 76), "Target Data");
+                GUI.Box(new Rect(widthOffset - 2, 36, 86, 76), Localizer.Format("#LOC_DockingCam_78"));
                 var target = TargetHelper.Target;// as Vessel;
                 if (target != null)
                 {
-                    GUI.Label(new Rect(widthOffset + 2, 55, 84, 44), "Focus on:\n" + target.GetVessel().GetName(), Styles.GreenLabel13);
-                    GUI.Label(new Rect(widthOffset + 4, 152, 80, 22), "Target Offset", Styles.Label13B);
+                    GUI.Label(new Rect(widthOffset + 2, 55, 84, 44), Localizer.Format("#LOC_DockingCam_75") + target.GetVessel().GetName(), Styles.GreenLabel13);
+                    GUI.Label(new Rect(widthOffset + 4, 152, 80, 22), Localizer.Format("#LOC_DockingCam_79"), Styles.Label13B);
                     TargetOffset = GUI.HorizontalSlider(new Rect(widthOffset + 2, 170, 80, 25), TargetOffset, 8, 128);
                 }
                 else
-                    GUI.Label(new Rect(widthOffset + 4, 60, 84, 44), "NO TARGET\nSELECTED", Styles.RedLabel13B);
+                    GUI.Label(new Rect(widthOffset + 4, 60, 84, 44), Localizer.Format("#LOC_DockingCam_80"), Styles.RedLabel13B);
             }
         }
 
@@ -403,33 +417,33 @@ namespace OLDD_camera.Camera
 
             if (ThisPart.vessel != FlightGlobals.ActiveVessel)
             {
-                if (IsLookAtMe = GUI.Toggle(new Rect(widthOffset - 2, 256, 84, 20), IsLookAtMe, "Look at Me"))
+                if (IsLookAtMe = GUI.Toggle(new Rect(widthOffset - 2, 256, 84, 20), IsLookAtMe, Localizer.Format("#LOC_DockingCam_81")))
                 {
                     IsOnboard = IsFollowMe = IsTargetCam = false;
                     var lastCameraMode = _cameraMode;
-                    _cameraMode = "Look at Me";
+                    _cameraMode = Localizer.Format("#LOC_DockingCam_81");
                     IsFollowMeOffsetX = IsFollowMeOffsetY = IsFollowMeOffsetZ = 0;
                     if (!IsLookAtMeEnabled)
                         CameraPositioning(lastCameraMode);
                 }
             }
 
-            if (IsFollowMe = GUI.Toggle(new Rect(widthOffset - 2, 274, 84, 20), IsFollowMe, "Follow Me"))
+            if (IsFollowMe = GUI.Toggle(new Rect(widthOffset - 2, 274, 84, 20), IsFollowMe, Localizer.Format("#LOC_DockingCam_82")))
             {
                 IsOnboard = IsLookAtMe = IsTargetCam = false;
                 var lastCameraMode = _cameraMode;
-                _cameraMode = "Follow Me";
+                _cameraMode = Localizer.Format("#LOC_DockingCam_82");
                 if (!IsFollowEnabled)
                     CameraPositioning(lastCameraMode);
             }
 
             if (ThisPart.vessel == FlightGlobals.ActiveVessel)
             {
-                if (IsTargetCam = GUI.Toggle(new Rect(widthOffset - 2, 292, 84, 20), IsTargetCam, "Target Cam"))
+                if (IsTargetCam = GUI.Toggle(new Rect(widthOffset - 2, 292, 84, 20), IsTargetCam, Localizer.Format("#LOC_DockingCam_83")))
                 {
                     IsOnboard = IsLookAtMe = IsFollowMe = false;
                     var lastCameraMode = _cameraMode;
-                    _cameraMode = "Target Cam";
+                    _cameraMode = Localizer.Format("#LOC_DockingCam_83");
                     if (IsTargetCamEnabled)
                     {
                         var target = TargetHelper.Target;// as Vessel;
@@ -455,7 +469,7 @@ namespace OLDD_camera.Camera
             if (!IsLookAtMe && !IsFollowMe && !IsTargetCam)
             {
                 IsOnboard = true;
-                _cameraMode = "Onboard";
+                _cameraMode = Localizer.Format("#LOC_DockingCam_84");
                 IsFollowMeOffsetX = IsFollowMeOffsetY = IsFollowMeOffsetZ = 0;
                 if (!IsOnboardEnabled)
                 {
@@ -473,7 +487,7 @@ namespace OLDD_camera.Camera
 
         private void CameraPositioning(string lastCameraMode)
         {
-            if (lastCameraMode == "Onboard")
+            if (lastCameraMode == Localizer.Format("#LOC_DockingCam_84"))
             {
                 CurrentCamRotation = _camObject.transform.rotation;
                 CurrentCamPosition = _camObject.transform.position;
@@ -628,7 +642,7 @@ namespace OLDD_camera.Camera
             Vector3 endPoint;
             if (target.Destination <= _allowedScanDistance && IsInsight(out endPoint) && IsTargetVisiable())
             {
-                ScreenMessages.PostScreenMessage(FlightGlobals.activeTarget.vessel.vesselName + " HAS BEEN SCANNED", 3f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(FlightGlobals.activeTarget.vessel.vesselName + Localizer.Format("#LOC_DockingCam_85"), 3f, ScreenMessageStyle.UPPER_CENTER);
                 if (!_isScienceActivate)
                 {
                     var spyScience = ThisPart.GetComponent<ModuleSpyExperiment>();
@@ -639,7 +653,7 @@ namespace OLDD_camera.Camera
             }
             else
             {
-                ScreenMessages.PostScreenMessage("NO DATA, TARGET " + FlightGlobals.activeTarget.vessel.vesselName + " IS OUT OF RANGE  OR VISIBILITY", 3f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DockingCam_86") + FlightGlobals.activeTarget.vessel.vesselName + Localizer.Format("#LOC_DockingCam_87"), 3f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

@@ -1,4 +1,5 @@
 //#define KSP170  // Better defined in the project file
+using KSP.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -72,6 +73,8 @@ namespace OLDD_camera.Camera
         internal bool IsAuxiliaryWindowButtonPres;
         internal bool IsZoomAllowed = true;
 
+        #region NO_LOCALIZATION
+
         protected List<UnityEngine.Camera> AllCameras = new List<UnityEngine.Camera>();
         protected List<GameObject> AllCamerasGameObject = new List<GameObject>();
         protected List<string> CameraNames = new List<string> { "GalaxyCamera", "Camera ScaledSpace", "Camera 00" };
@@ -130,6 +133,8 @@ namespace OLDD_camera.Camera
                 LoadWinSettings();
             }
         }
+
+        #endregion
 
         ~BaseCamera()
         {
@@ -225,7 +230,7 @@ namespace OLDD_camera.Camera
                     if (cameraExample != null)
                     {
                         camera.CopyFrom(cameraExample);
-                        camera.name = string.Format("{1} copy of {0}", CameraNames[i], WindowCount);
+                        camera.name = string.Format("{1} " + "copy of" + " {0}", CameraNames[i], WindowCount);
                         camera.targetTexture = RenderTexture;
                         if (i == 2 && dcm != null && dcm.cameraCustomNearClipPlane > 0)
                             camera.nearClipPlane = dcm.cameraCustomNearClipPlane;
@@ -281,7 +286,7 @@ namespace OLDD_camera.Camera
             if (!IsActive) return;
             //if (MapView.MapIsEnabled) return;
             WindowPosition = ClickThruBlocker.GUIWindow(WindowId, KSPUtil.ClampRectToScreen(WindowPosition), DrawWindow, WindowLabel);
-            int electricityId = PartResourceLibrary.Instance.GetDefinition("ElectricCharge").id;
+            int electricityId = PartResourceLibrary.Instance.GetDefinition(Localizer.Format("#LOC_DockingCam_36")).id;
             double electricChargeAmount;
             double electricChargeMaxAmount;
             ThisPart.GetConnectedResourceTotals(electricityId, out electricChargeAmount, out electricChargeMaxAmount);
@@ -387,10 +392,10 @@ namespace OLDD_camera.Camera
             CalculatedZoom = !ZoomMultiplier ? calculateZoom : calculateZoom * MinZoomMultiplier * 6;
             if (IsAuxiliaryWindowOpen)
             {
-                GUI.Label(new Rect(widthOffset, 22, 80, 20), "Zoom: " + CalculatedZoom, Styles.Label13B);
+                GUI.Label(new Rect(widthOffset, 22, 80, 20), Localizer.Format("#LOC_DockingCam_37") + CalculatedZoom, Styles.Label13B);
 
                 if (dcm != null && dcm.isDockingNode && FlightGlobals.ActiveVessel == ThisPart.vessel)
-                    _isTargetPoint = GUI.Toggle(new Rect(widthOffset - 2, 233, 88, 20), _isTargetPoint, "Target Mark");
+                    _isTargetPoint = GUI.Toggle(new Rect(widthOffset - 2, 233, 88, 20), _isTargetPoint, Localizer.Format("#LOC_DockingCam_38"));
             }
             //GUI.DrawTexture(TexturePosition, _textureBackGroundCamera);
             //Log.Info("ExtendedDrawWindowL1 4, _shaderIndex: " + _shaderIndex);
@@ -399,7 +404,7 @@ namespace OLDD_camera.Camera
             CurrentShader = AssetLoader.materials[_shaderIndex];
             //Log.Info("ExtendedDrawWindowL1 5");
 
-            _currentShaderName = CurrentShader == null ? "none" : CurrentShader.name;
+            _currentShaderName = CurrentShader == null ? Localizer.Format("#LOC_DockingCam_39") : CurrentShader.name;
             //Log.Info("ExtendedDrawWindowL1 6");
 
             if (Event.current.type.Equals(EventType.Repaint))
@@ -468,7 +473,7 @@ namespace OLDD_camera.Camera
                 return;
 
             if (!ThisPart.vessel.Equals(FlightGlobals.ActiveVessel))
-                GUI.Label(new Rect(8, 34, 222, 20), "Broadcast from: " + ThisPart.vessel.vesselName, Styles.GreenLabel11);
+                GUI.Label(new Rect(8, 34, 222, 20), Localizer.Format("#LOC_DockingCam_40") + ThisPart.vessel.vesselName, Styles.GreenLabel11);
 
             if (IsAuxiliaryWindowOpen)
                 GUI.DrawTexture(new Rect(TexturePosition.width + 8, 34, GameSettings.UI_SCALE * 1, TexturePosition.height), _textureSeparator); //Separator
@@ -504,6 +509,7 @@ namespace OLDD_camera.Camera
                     _shaderIndex++;
             }
 
+            #region NO_LOCALIZATION
             if (GUI.RepeatButton(new Rect(TexturePosition.xMax - 42, TexturePosition.yMax - 22, 20, 20), "-") &&
                 UnityEngine.Camera.allCameras.FirstOrDefault(x => x.name == "Camera 00") != null) //Size of main window
             {
@@ -525,6 +531,8 @@ namespace OLDD_camera.Camera
 
                 IsAuxiliaryWindowButtonPres = IsAuxiliaryWindowOpen;
             }
+            #endregion
+
             if (IsZoomAllowed)
                 CurrentZoom = GUI.HorizontalSlider(new Rect(TexturePosition.width / 2 - 80, GUI.skin.font.lineHeight + 10, 160, 10), CurrentZoom, MaxZoom, MinZoom);
         }

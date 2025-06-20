@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using KSP.Localization;
 using OLDD_camera.Camera;
-using UnityEngine;
-
+using System.Collections;
 using System.Linq;
+using UnityEngine;
 
 namespace OLDD_camera.Modules
 {
@@ -13,7 +13,7 @@ namespace OLDD_camera.Modules
         /// Module adds an external camera and gives control over it
         /// </summary>
         [KSPField(guiActive = true, guiActiveEditor = false, guiName = "Docking Camera", isPersistant = true),
-        UI_Toggle(controlEnabled = true, enabledText = "ON", disabledText = "OFF", scene = UI_Scene.Flight)]
+        UI_Toggle(controlEnabled = true, enabledText = "#LOC_DockingCam_90", disabledText = "#LOC_DockingCam_91", scene = UI_Scene.Flight)]
         public bool IsEnabled;
 
         [KSPField(isPersistant = true)]
@@ -108,7 +108,9 @@ namespace OLDD_camera.Modules
         public bool isDockingNode = true;				// Is this a docking node
 
         [KSPField]
+        #region NO_LOCALIZATION
         public string photoDir = "DockingCam";
+        #endregion
 
         //////////////////////////////////////////////////////////////////////////////
 
@@ -150,6 +152,7 @@ namespace OLDD_camera.Modules
         //    if (state == StartState.Editor || _camera != null) return;
 
         Animation deployAnim = null;
+                #region NO_LOCALIZATION
         public void Start()
         {
             if (HighLogic.LoadedSceneIsFlight)
@@ -169,13 +172,12 @@ namespace OLDD_camera.Modules
                         _windowSize, restrictShaderTo, allowZoom: allowZoom);
                 }
 
-            if (cameraLabel != "")
-                Fields["IsEnabled"].guiName = cameraLabel;
+                if (cameraLabel != "")
+                    Fields["IsEnabled"].guiName = cameraLabel;
 
-
-            _crossDPAI = crossDPAIonAtStartup;
-            _crossOLDD = crossOLDDonAtStartup;
-            _targetCrossStock = targetCrossStockOnAtStartup;
+                _crossDPAI = crossDPAIonAtStartup;
+                _crossOLDD = crossOLDDonAtStartup;
+                _targetCrossStock = targetCrossStockOnAtStartup;
 #if false
             if (!devMode)
             {
@@ -183,8 +185,8 @@ namespace OLDD_camera.Modules
                 Events["StartCameraAdjuster"].guiActive = false;
             }
 #endif
-            _camera.setECusageCost(electricchargeCost);
-        //}
+                _camera.setECusageCost(electricchargeCost);
+                //}
 
                 //_camera.DoStart();
                 if (deployAnimationName != null)
@@ -227,6 +229,7 @@ namespace OLDD_camera.Modules
             }
         }
 
+                #endregion
 
         public override void OnUpdate()
         {
@@ -263,6 +266,7 @@ namespace OLDD_camera.Modules
                 _camera.Update();
         }
 
+        #region NO_LOCALIZATION
         public void Activate()
         {
             if (_camera.IsActive) return;
@@ -277,6 +281,7 @@ namespace OLDD_camera.Modules
             StopCoroutine("WhiteNoise");
             _camera.Deactivate();
         }
+        #endregion
 
         private IEnumerator WhiteNoise()
         {

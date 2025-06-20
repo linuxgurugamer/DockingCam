@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace OLDD_camera.Utils
 {
+    #region NO_LOCALIZATION
     public static class Log
     {
         public enum LEVEL
@@ -110,4 +111,5 @@ namespace OLDD_camera.Utils
         }
 
     }
+    #endregion
 }
